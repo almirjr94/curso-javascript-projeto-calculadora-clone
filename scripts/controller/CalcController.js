@@ -3,7 +3,7 @@ class CalcController {
     constructor() {
 
         this._operation = [];
-        this._lacale = 'pt-BR';
+        this._locale = 'pt-BR';
         this._displayCalcEl = document.querySelector("#display");
         this._dateEl = document.querySelector("#data");
         this._timeEl = document.querySelector("#hora");
@@ -50,20 +50,27 @@ class CalcController {
         this._operation.push(value);
 
         if (this._operation.length > 3) {
-           this.calc();
+            this.calc();
         }
     }
 
-    calc(){
+    calc() {
         let last = this._operation.pop();
         let result = eval(this._operation.join(""));
-        this._operation = [result,last];
+        this._operation = [result, last];
+        this.setLastNumberToDisplay();
     }
 
-    setLastNumberToDisplay(){
+    setLastNumberToDisplay() {
+        let lastNumber;
 
-
-
+        for (let i = this._operation.length - 1; i >= 0; i--) {
+            if (!this.isOperator(this._operation[i])) {
+                lastNumber = this._operation[i];
+                break;
+            }
+        }
+        this.displayCalc = lastNumber;
     }
 
     addOperation(value) {
@@ -75,6 +82,7 @@ class CalcController {
                 console.log("oi", value);
             } else {
                 this.pushOperation(value);
+                this.setLastNumberToDisplay();
             }
 
         } else {
